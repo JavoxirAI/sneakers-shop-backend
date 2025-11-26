@@ -12,41 +12,37 @@ def product_list(request):
     if request.method == 'GET':
         products = Product.objects.select_related('category', 'brand').prefetch_related('images', 'sizes').all()
 
-        # Filterlar
-        category_id = request.GET.get('category_id')
-        brand_id = request.GET.get('brand_id')
-        gender = request.GET.get('gender')
-        color = request.GET.get('color')
-        material = request.GET.get('material')
-        price_min = request.GET.get('price_min')
-        price_max = request.GET.get('price_max')
-        rating = request.GET.get('rating')
-        is_popular = request.GET.get('is_popular')
-        is_new = request.GET.get('is_new')
-        sizes = request.GET.get('sizes')
+        search = request.GET.get('search')
+        if search:
+            products = products.filter(name__icontains=search)
 
-        if category_id:
-            products = products.filter(category_id=category_id)
-        if brand_id:
-            products = products.filter(brand_id=brand_id)
+        gender = request.GET.get('gender')
+        brand = request.GET.get('brand')  # brand ID
+        color = request.GET.get('color')  # HEX kod (masalan: #FF5733)
+        size = request.GET.get('size')  # O'lcham (masalan: 42, M, L)
+        material = request.GET.get('material')
+        min_price = request.GET.get('minPrice')
+        max_price = request.GET.get('maxPrice')
+
         if gender:
             products = products.filter(gender=gender)
+
+        if brand:
+            products = products.filter(brand_id=brand)
+
         if color:
-            products = products.filter(color__icontains=color)
+            products = products.filter(color_hex__iexact=color)
+
+        if size:
+            products = products.filter(sizes__size__iexact=size).distinct()
+
         if material:
             products = products.filter(material__icontains=material)
-        if price_min:
-            products = products.filter(price__gte=price_min)
-        if price_max:
-            products = products.filter(price__lte=price_max)
-        if rating:
-            products = products.filter(rating__gte=rating)
-        if is_popular:
-            products = products.filter(is_popular=is_popular.lower() == 'true')
-        if is_new:
-            products = products.filter(is_new=is_new.lower() == 'true')
-        if sizes:
-            products = products.filter(sizes__size=sizes).distinct()
+
+        if min_price:
+            products = products.filter(price__gte=min_price)
+        if max_price:
+            products = products.filter(price__lte=max_price)
 
         serializer = ProductListSerializer(products, many=True)
         return Response(serializer.data)
@@ -61,6 +57,11 @@ def product_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def product_detail(request, pk):
+    """
+    GET: Bitta mahsulotni olish
+    PUT: Mahsulotni yangilash
+    DELETE: Mahsulotni o'chirish
+    """
     try:
         product = Product.objects.select_related('category', 'brand').prefetch_related('images', 'sizes').get(pk=pk)
     except Product.DoesNotExist:

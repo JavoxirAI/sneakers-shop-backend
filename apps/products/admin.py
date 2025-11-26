@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from apps.products.models import ProductImage, Size, Product
+from apps.products.models import *
 
 
 class ProductImageInline(admin.TabularInline):
@@ -16,9 +16,9 @@ class SizeInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(TranslationAdmin):
-    list_display = ['id', 'name', 'category', 'brand', 'price', 'gender', 'rating', 'is_popular', 'is_new']
+    list_display = ['id', 'name', 'category', 'brand', 'price', 'gender', 'color_hex', 'rating', 'is_popular', 'is_new']
     list_filter = ['category', 'brand', 'gender', 'is_popular', 'is_new']
-    search_fields = ['name', 'color', 'material']
+    search_fields = ['name', 'material']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, SizeInline]
 

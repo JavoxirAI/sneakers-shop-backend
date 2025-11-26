@@ -4,7 +4,7 @@ from apps.products.models import Product
 
 
 class ProductTranslationOptions(TranslationOptions):
-    fields = ('name', 'color', 'material')
+    fields = ('name', 'material')
 
 
 translator.register(Product, ProductTranslationOptions)

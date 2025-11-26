@@ -28,7 +28,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'name', 'slug', 'category', 'brand', 'price',
-            'gender', 'gender_display', 'color', 'material',
+            'gender', 'gender_display', 'color_hex', 'material',
             'is_popular', 'is_new', 'rating', 'images', 'sizes',
             'created_at', 'updated_at'
         ]
@@ -41,7 +41,7 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'name', 'slug', 'category', 'brand', 'price',
-            'gender', 'color', 'material', 'is_popular', 'is_new',
+            'gender', 'color_hex', 'material', 'is_popular', 'is_new',
             'rating', 'sizes', 'created_at', 'updated_at'
         ]
         read_only_fields = ['slug', 'created_at', 'updated_at']

@@ -28,7 +28,7 @@ class Product(models.Model):
     )
     price = models.DecimalField(_("Narx"), max_digits=10, decimal_places=2)
     gender = models.CharField(_("Jins"), max_length=10, choices=GENDER_CHOICES)
-    color = models.CharField(_("Rang"), max_length=100)
+    color_hex = models.CharField(_("Rang HEX kodi"), max_length=7, help_text="Masalan: #FF5733")
     material = models.CharField(_("Material"), max_length=100)
     is_popular = models.BooleanField(_("Mashhur"), default=False)
     is_new = models.BooleanField(_("Yangi"), default=False)
